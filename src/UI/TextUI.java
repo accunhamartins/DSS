@@ -18,5 +18,9 @@ public class TextUI {
         this.menu = new Menu(opcoes);
         this.scanner = new Scanner(System.in);
     }
+
+    public void run() {
+        System.out.println("Teste");
+}
 }
 
