@@ -1,10 +1,10 @@
 package business;
 
 public class Palete {
-    private String code;
+    private QRCode code;
     private Localizacao localizacao;
 
-    public Palete(String code, Localizacao localizacao){
+    public Palete(QRCode code, Localizacao localizacao){
         this.code = code;
         this.localizacao = localizacao;
     }
@@ -13,15 +13,15 @@ public class Palete {
         return this.localizacao.clone();
     }
 
-    public String getCode() {
-        return code;
+    public QRCode getCode() {
+        return this.code.clone();
     }
 
     public void setLocalizacao(Localizacao localizacao) {
         this.localizacao = localizacao;
     }
 
-    public void setCode(String code) {
+    public void setCode(QRCode code) {
         this.code = code;
     }
 }
