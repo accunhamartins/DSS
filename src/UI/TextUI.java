@@ -1,5 +1,7 @@
 package UI;
 
+import business.*;
+
 import java.util.Scanner;
 
 public class TextUI {
@@ -20,6 +22,12 @@ public class TextUI {
     }
 
     public void run() {
+        new Localizacao();
+        new Material();
+        new Palete();
+        new Prateleira();
+        new QRCode();
+        new Robot();
         System.out.println("Teste");
 }
 }

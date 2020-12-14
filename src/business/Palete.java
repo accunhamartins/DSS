@@ -7,6 +7,14 @@ public class Palete {
     private double peso;
     private double preco;
 
+    public Palete(){
+        this.code = null;
+        this.localizacao = null;
+        this.material = null;
+        this.peso = 0;
+        this.preco = 0;
+    }
+
     public Palete(QRCode code, Localizacao localizacao, Material material, double peso){
         this.code = code;
         this.localizacao = localizacao;
