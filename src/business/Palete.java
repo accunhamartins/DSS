@@ -1,6 +1,7 @@
 package business;
 
 public class Palete {
+    private int ID;
     private QRCode code;
     private Localizacao localizacao;
     private Material material;
@@ -8,6 +9,7 @@ public class Palete {
     private double preco;
 
     public Palete(){
+        this.ID = 0;
         this.code = null;
         this.localizacao = null;
         this.material = null;
@@ -15,7 +17,8 @@ public class Palete {
         this.preco = 0;
     }
 
-    public Palete(QRCode code, Localizacao localizacao, Material material, double peso){
+    public Palete(int ID, QRCode code, Localizacao localizacao, Material material, double peso){
+        this.ID = ID;
         this.code = code;
         this.localizacao = localizacao;
         this.material = material;
@@ -24,6 +27,7 @@ public class Palete {
     }
 
     public Palete(Palete p){
+        this.ID = p.getID();
         this.code = p.getCode().clone();
         this.localizacao = p.getLocalizacao().clone();
         this.material = p.getMaterial().clone();
@@ -33,6 +37,10 @@ public class Palete {
 
     public Localizacao getLocalizacao() {
         return this.localizacao.clone();
+    }
+
+    public int getID() {
+        return ID;
     }
 
     public QRCode getCode() {
@@ -69,5 +77,13 @@ public class Palete {
 
     public void setPreco(double preco) {
         this.preco = preco;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public Palete clone() {
+        return new Palete(this);
     }
 }

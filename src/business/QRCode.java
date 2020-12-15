@@ -1,11 +1,15 @@
 package business;
 
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+
 public class QRCode {
     private String codigo;
 
     public QRCode(){
         this.codigo = null;
     }
+
     public QRCode(String code){
         this.codigo = code;
     }

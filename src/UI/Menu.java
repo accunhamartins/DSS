@@ -60,4 +60,12 @@ public class Menu {
         }
         return op;
     }
+
+    /**
+     * Método para obter a última opção lida
+     */
+    public int getOpcao() {
+        return this.op;
+    }
+
 }
