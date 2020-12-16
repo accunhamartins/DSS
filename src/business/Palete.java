@@ -6,7 +6,7 @@ public class Palete {
     private Localizacao localizacao;
     private Material material;
     private double peso;
-    private double preco;
+    private int armazenada;
 
     public Palete(){
         this.ID = 0;
@@ -14,16 +14,16 @@ public class Palete {
         this.localizacao = null;
         this.material = null;
         this.peso = 0;
-        this.preco = 0;
+        this.armazenada = 0;
     }
 
-    public Palete(int ID, QRCode code, Localizacao localizacao, Material material, double peso){
+    public Palete(int ID, QRCode code, Localizacao localizacao, Material material, double peso, int armazenada){
         this.ID = ID;
         this.code = code;
         this.localizacao = localizacao;
         this.material = material;
         this.peso = peso;
-        this.preco = material.getPrecoUnitario() * this.peso;
+        this.armazenada = armazenada;
     }
 
     public Palete(Palete p){
@@ -32,7 +32,7 @@ public class Palete {
         this.localizacao = p.getLocalizacao().clone();
         this.material = p.getMaterial().clone();
         this.peso = p.getPeso();
-        this.preco = p.getPreco();
+        this.armazenada = p.getArmazenada();
     }
 
     public Localizacao getLocalizacao() {
@@ -55,8 +55,8 @@ public class Palete {
         return peso;
     }
 
-    public double getPreco() {
-        return preco;
+    public int getArmazenada() {
+        return armazenada;
     }
 
     public void setLocalizacao(Localizacao localizacao) {
@@ -75,12 +75,12 @@ public class Palete {
         this.peso = peso;
     }
 
-    public void setPreco(double preco) {
-        this.preco = preco;
-    }
-
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    public void setArmazenada(int armazenada) {
+        this.armazenada = armazenada;
     }
 
     public Palete clone() {

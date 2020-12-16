@@ -20,7 +20,7 @@ public class LeitorQR {
         this.paleteRegistada = new HashMap<Integer,Palete>();
 
         for(Palete p : paletes.values()){
-            this.paleteRegistada.put(p.getID(), p.clone());
+            this.paleteRegistada.put(p.getLocalizacao().getZona(), p.clone());
         }
     }
 
@@ -31,14 +31,14 @@ public class LeitorQR {
     public Map<Integer, Palete> getPaleteRegistada() {
         Map<Integer, Palete> ret = new HashMap<>();
         for(Palete p: this.paleteRegistada.values())
-        ret.put(p.getID(),p.clone());
+        ret.put(p.getLocalizacao().getPrateleira(),p.clone());
         return ret;
     }
 
     public void setPaleteRegistada(Map<Integer, Palete> paleteRegistada) {
         this.paleteRegistada =new HashMap<>();
         for(Palete p: paleteRegistada.values()){
-            this.paleteRegistada.put(p.getID(),p.clone());
+            this.paleteRegistada.put(p.getLocalizacao().getZona(),p.clone());
         }
     }
 
@@ -62,7 +62,7 @@ public class LeitorQR {
                 System.out.println("Registo Inválido");
                 return null;
             }
-            return new Palete(id, cod, new Localizacao(corredor, prateleira), new Material(designacao, precoUni), peso);
+            return new Palete(id, cod, new Localizacao(corredor, prateleira), new Material(designacao, precoUni), peso, 0);
         } catch (Exception e) {
             return null;
         }
@@ -73,7 +73,7 @@ public class LeitorQR {
         if(p == null) throw new RegistoInvalidoException();
         else
             {
-            paleteRegistada.put(p.getID(), p.clone());
+            paleteRegistada.put(p.getLocalizacao().getZona(), p.clone());
         }
 
     }
