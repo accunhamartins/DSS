@@ -20,7 +20,7 @@ public class LeitorQR {
         this.paleteRegistada = new HashMap<Integer,Palete>();
 
         for(Palete p : paletes.values()){
-            this.paleteRegistada.put(p.getLocalizacao().getZona(), p.clone());
+            this.paleteRegistada.put(p.getID(), p.clone());
         }
     }
 
@@ -31,38 +31,36 @@ public class LeitorQR {
     public Map<Integer, Palete> getPaleteRegistada() {
         Map<Integer, Palete> ret = new HashMap<>();
         for(Palete p: this.paleteRegistada.values())
-        ret.put(p.getLocalizacao().getPrateleira(),p.clone());
+        ret.put(p.getID(),p.clone());
         return ret;
     }
 
     public void setPaleteRegistada(Map<Integer, Palete> paleteRegistada) {
         this.paleteRegistada =new HashMap<>();
         for(Palete p: paleteRegistada.values()){
-            this.paleteRegistada.put(p.getLocalizacao().getZona(),p.clone());
+            this.paleteRegistada.put(p.getID(), p.clone());
         }
     }
 
-    public void valida(int id, int prateleira, int corredor) throws RegistoInvalidoException{
-        if (paleteRegistada.containsKey(id) || prateleira != 0 || corredor != 0) throw new RegistoInvalidoException();
+    public void valida(int id) throws RegistoInvalidoException{
+        if (paleteRegistada.containsKey(id)) throw new RegistoInvalidoException();
     }
 
 
     private Palete validaPalete(QRCode cod) throws RegistoInvalidoException{
         try {
-            String[] campos = cod.getCodigo().split("&&", 6);
+            String[] campos = cod.getCodigo().split("&&", 4);
             int id = parseInt(campos[0]);
-            int corredor = parseInt(campos[1]);
-            int prateleira = parseInt(campos[2]);
-            String designacao = campos[3];
-            double precoUni = parseDouble(campos[4]);
-            double peso = parseDouble(campos[5]);
+            String designacao = campos[1];
+            double precoUni = parseDouble(campos[2]);
+            double peso = parseDouble(campos[3]);
             try {
-                valida(id, corredor, prateleira);
+                valida(id);
             } catch (RegistoInvalidoException e) {
                 System.out.println("Registo Inválido");
                 return null;
             }
-            return new Palete(id, cod, new Localizacao(corredor, prateleira), new Material(designacao, precoUni), peso, 0);
+            return new Palete(id, cod, new Localizacao(0, 0), new Material(designacao, precoUni), peso, 0);
         } catch (Exception e) {
             return null;
         }
@@ -73,7 +71,7 @@ public class LeitorQR {
         if(p == null) throw new RegistoInvalidoException();
         else
             {
-            paleteRegistada.put(p.getLocalizacao().getZona(), p.clone());
+            paleteRegistada.put(p.getID(), p.clone());
         }
 
     }

@@ -40,13 +40,17 @@ public class TextUI {
     }
 
     private void registaPalete() throws RegistoInvalidoException {
-        LeitorQR qr = new LeitorQR();
         QRCode cod = new QRCode();
         System.out.println("Insira QRCode: ");
         String codigo = scanner.nextLine();
         cod.setCodigo(codigo);
+        Map<Integer, Robot> robots = this.model.getRobots();
+        robots.put(0, new Robot(0, true, null));
+        this.model.setRobot(robots);
         try {
-            qr.registaPalete(cod);
+            this.model.registaPalete(cod);
+            System.out.println("Registado com sucesso!");
+            this.model.ordenaTransporte();
         } catch (RegistoInvalidoException e){
             System.out.println("O código inserido é inválido");
         }
@@ -56,12 +60,12 @@ public class TextUI {
         System.out.println("Insira password: ");
         String password = scanner.nextLine();
         Map<String, Gestor> gestores = this.model.getGestores();
-
+        gestores.put("12345", new Gestor("12345", "Manuel"));
         if(gestores.containsKey(password)) {
             Gestor g = gestores.get(password);
             System.out.println("Seja Bem-Vindo Sr. " + g.getNome());
             Map<Integer, Palete> paletes = this.model.getPalete();
-            System.out.println(paletes);
+            System.out.println(this.model.localizaPalete());
         }
         else{
             System.out.println("Password inválida!");

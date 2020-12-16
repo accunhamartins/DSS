@@ -17,12 +17,16 @@ public class PaleteDAO implements Map<Integer, Palete> {
            String sql = "CREATE TABLE IF NOT EXISTS QRCode (" +
                     "Codigo varchar(100) NOT NULL PRIMARY KEY )";
             stm.executeUpdate(sql);
+            sql = "CREATE TABLE IF NOT EXISTS Armazem (" +
+                    "ID int NOT NULL PRIMARY KEY )";
+            stm.executeUpdate(sql);
             sql = "CREATE TABLE IF NOT EXISTS Material (" +
                     "Designacao varchar(100) NOT NULL PRIMARY KEY ," +
                     "Preco DECIMAL(5,2) NOT NULL )";
             stm.executeUpdate(sql);
             sql = "CREATE TABLE IF NOT EXISTS palete (" +
                     "ID int NOT NULL PRIMARY KEY," +
+                    "Armazem int NOT NULL," +
                     "QRCode varchar(100) NOT NULL," +
                     "Peso DECIMAL(5,2)," +
                     "Corredor int NOT NULL, " +
@@ -30,6 +34,7 @@ public class PaleteDAO implements Map<Integer, Palete> {
                     "Material varchar(100) NOT NULL," +
                     "Armazenada int default null, " +
                     "foreign key(QRCode) references QRCode(Codigo), " +
+                    "foreign key(Armazem) references Armazem(ID), " +
                     "foreign key(Material) references Material(Designacao))" ;
             stm.executeUpdate(sql);
 
@@ -109,7 +114,7 @@ public class PaleteDAO implements Map<Integer, Palete> {
                 Material material = null;
                 double peso = 0;
                 int armazenada = 0;
-                String sql = "SELECT * FROM salas WHERE Num='"+rs.getString("Sala")+"'";
+                String sql = "SELECT * FROM palete WHERE id='"+rs.getString("ID")+"'";
                 try (ResultSet rsa = stm.executeQuery(sql)) {
                     if (rsa.next()) {
                         code = new QRCode(rs.getString("QRCode"));
