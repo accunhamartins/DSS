@@ -32,13 +32,13 @@ public class Menu {
 
     /** Apresentar o menu */
     private void showMenu() {
-        System.out.println("\n *** Menu *** ");
+        System.out.println("\n ******* MENU ******* ");
         for (int i=0; i<this.opcoes.size(); i++) {
             System.out.print(i+1);
             System.out.print(" - ");
             System.out.println(this.opcoes.get(i));
         }
-        System.out.println("0 - Sair");
+        System.out.println("0 - SAIR");
     }
 
     /** Ler uma opção válida */
@@ -46,7 +46,7 @@ public class Menu {
         int op;
         //Scanner is = new Scanner(System.in);
 
-        System.out.print("Opção: ");
+        System.out.print("OPÇÃO: ");
         try {
             op = is.nextInt();
         }

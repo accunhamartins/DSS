@@ -1,4 +1,5 @@
 import UI.TextUI;
+import data.PaleteDAO;
 
 public class Main {
 

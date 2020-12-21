@@ -2,39 +2,28 @@ package business;
 
 public class Robot {
     private int id;
-    private boolean disponivel;
-    private String codTransportar;
+    private int disponivel;
 
 
     public Robot(){
         this.id = 0;
-        this.disponivel = true;
-        this.codTransportar = null;
+        this.disponivel = 1;
     }
 
-    public Robot(int id, boolean disponivel, String codTransportar){
+    public Robot(int id, int disponivel){
         this.id = id;
         this.disponivel = disponivel;
-        this.codTransportar = codTransportar;
-    }
-
-    public String getCodTransportar() {
-        return codTransportar;
     }
 
     public int getId() {
         return id;
     }
 
-    public boolean isDisponivel() {
+    public int isDisponivel() {
         return disponivel;
     }
 
-    public void setCodTransportar(String codTransportar) {
-        this.codTransportar = codTransportar;
-    }
-
-    public void setDisponivel(boolean disponivel) {
+    public void setDisponivel(int disponivel) {
         this.disponivel = disponivel;
     }
 

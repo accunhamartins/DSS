@@ -8,6 +8,8 @@ import business.QRCode;
 import java.sql.*;
 import java.util.*;
 
+import static java.lang.Double.parseDouble;
+
 public class PaleteDAO implements Map<Integer, Palete> {
     private static PaleteDAO singleton = null;
 
@@ -24,7 +26,7 @@ public class PaleteDAO implements Map<Integer, Palete> {
                     "Designacao varchar(100) NOT NULL PRIMARY KEY ," +
                     "Preco DECIMAL(5,2) NOT NULL )";
             stm.executeUpdate(sql);
-            sql = "CREATE TABLE IF NOT EXISTS palete (" +
+            sql = "CREATE TABLE IF NOT EXISTS Palete (" +
                     "ID int NOT NULL PRIMARY KEY," +
                     "Armazem int NOT NULL," +
                     "QRCode varchar(100) NOT NULL," +
@@ -32,7 +34,6 @@ public class PaleteDAO implements Map<Integer, Palete> {
                     "Corredor int NOT NULL, " +
                     "Prateleira int NOT NULL, " +
                     "Material varchar(100) NOT NULL," +
-                    "Armazenada int default null, " +
                     "foreign key(QRCode) references QRCode(Codigo), " +
                     "foreign key(Armazem) references Armazem(ID), " +
                     "foreign key(Material) references Material(Designacao))" ;
@@ -58,7 +59,7 @@ public class PaleteDAO implements Map<Integer, Palete> {
         int i = 0;
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT count(*) FROM palete")) {
+             ResultSet rs = stm.executeQuery("SELECT count(*) FROM Palete")) {
             if(rs.next()) {
                 i = rs.getInt(1);
             }
@@ -84,7 +85,7 @@ public class PaleteDAO implements Map<Integer, Palete> {
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
              Statement stm = conn.createStatement();
              ResultSet rs =
-                     stm.executeQuery("SELECT ID FROM palete WHERE ID='"+key.toString()+"'")) {
+                     stm.executeQuery("SELECT ID FROM Palete WHERE ID='"+key.toString()+"'")) {
             r = rs.next();
         } catch (SQLException e) {
             // Database error!
@@ -106,27 +107,22 @@ public class PaleteDAO implements Map<Integer, Palete> {
         Palete p = null;
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT * FROM palete WHERE Id='"+key+"'")) {
+             ResultSet rs = stm.executeQuery("SELECT * FROM Palete WHERE ID='"+key+"'")) {
             if (rs.next()) {
-                // Reconstruir a Sala
                 QRCode code = null;
                 Localizacao local = null;
                 Material material = null;
                 double peso = 0;
-                int armazenada = 0;
-                String sql = "SELECT * FROM palete WHERE id='"+rs.getString("ID")+"'";
-                try (ResultSet rsa = stm.executeQuery(sql)) {
-                    if (rsa.next()) {
-                        code = new QRCode(rs.getString("QRCode"));
-                        local = new Localizacao(rs.getInt("Corredor"), rs.getInt("Prateleira"));
-                        material = new Material(rs.getString("Material"), rs.getDouble("Preco"));
-                        peso = rs.getDouble("Peso");
-                        armazenada = rs.getInt("Armazenada");
-                        p = new Palete(rs.getInt("ID"),code, local, material, peso, armazenada);
-                    }
+                code = new QRCode(rs.getString("QRCode"));
+                String[] campos = code.getCodigo().split("&&", 4);
+                double precoUni = parseDouble(campos[2]);
+                local = new Localizacao(rs.getInt("Corredor"), rs.getInt("Prateleira"));
+                material = new Material(rs.getString("Material"), precoUni);
+                peso = rs.getDouble("Peso");
+                  p = new Palete(rs.getInt("ID"),code, local, material, peso);
                 }
             }
-        } catch (SQLException e) {
+         catch (SQLException e) {
             // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
@@ -141,22 +137,19 @@ public class PaleteDAO implements Map<Integer, Palete> {
         QRCode qr = t.getCode();
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
              Statement stm = conn.createStatement()) {
+            stm.executeUpdate(
+                    "INSERT INTO QRCode VALUES ('"+qr.getCodigo() + "'" +") " +
+                            "ON DUPLICATE KEY UPDATE Codigo=VALUES(Codigo)");
 
             stm.executeUpdate(
-                    "INSERT INTO QRCode" +
-                            "VALUES ('"+ qr.getCodigo()+ "'" +") " +
-                            "ON DUPLICATE KEY UPDATE Codigo =Values(Codigo)");
-
-
-            stm.executeUpdate(
-                    "INSERT INTO Material VALUES ('"+m.getDesignacao()+"', '"+m.getPrecoUnitario()+"') " +
+                    "INSERT INTO Material VALUES ('"+m.getDesignacao() +"', '"+m.getPrecoUnitario()+ "'" +") " +
                             "ON DUPLICATE KEY UPDATE Designacao=VALUES(Designacao)");
 
             stm.executeUpdate(
-                    "INSERT INTO Palete VALUES ('"+t.getID()+"', '"+qr.getCodigo()+"', '"+l.getZona()+"', '"
-                            +l.getPrateleira()+ "', '" + m.getDesignacao() + "', '"+ t.getPeso()+
-                    "', '" + t.getArmazenada()+ "'" +") " +
-                            "ON DUPLICATE KEY UPDATE ID=VALUES(ID)");
+                    "INSERT INTO Palete VALUES ('"+t.getID()+ "', '"+ 1 +"', '"+qr.getCodigo()+"', '"+t.getPeso()+"', '"
+                            +l.getZona()+ "', '" + l.getPrateleira() + "', '"+ m.getDesignacao()
+                            + "'" +") " +
+                            "ON DUPLICATE KEY UPDATE Corredor =VALUES(Corredor), Prateleira = VALUES(Prateleira)");
 
         } catch (SQLException e) {
             // Database error!
@@ -172,7 +165,7 @@ public class PaleteDAO implements Map<Integer, Palete> {
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
              Statement stm = conn.createStatement())
              {
-            stm.executeUpdate("DELETE FROM palete WHERE Id='"+key+"'");
+            stm.executeUpdate("DELETE FROM Palete WHERE Id='"+key+"'");
         } catch (Exception e) {
             // Database error!
             e.printStackTrace();
@@ -192,7 +185,7 @@ public class PaleteDAO implements Map<Integer, Palete> {
     public void clear() {
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
              Statement stm = conn.createStatement()) {
-            stm.executeUpdate("TRUNCATE palete");
+            stm.executeUpdate("TRUNCATE Palete");
         } catch (SQLException e) {
             // Database error!
             e.printStackTrace();
@@ -206,17 +199,15 @@ public class PaleteDAO implements Map<Integer, Palete> {
         throw new NullPointerException("Not implemented!");
     }
 
-    /**
-     * @return Todos as turmas da base de dados
-     */
+
     @Override
     public Collection<Palete> values() {
         Collection<Palete> res = new HashSet<>();
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
              Statement stm = conn.createStatement();
-             ResultSet rs = stm.executeQuery("SELECT Id FROM paletes")) {
+             ResultSet rs = stm.executeQuery("SELECT ID FROM Palete")) {
             while (rs.next()) {
-                String idt = rs.getString("Id");
+                String idt = rs.getString("ID");
                 Palete t = this.get(idt);
                 res.add(t);
             }
@@ -228,10 +219,7 @@ public class PaleteDAO implements Map<Integer, Palete> {
         return res;
     }
 
-    /**
-     * NÃO IMPLEMENTADO!
-     * @return ainda nada!
-     */
+
     @Override
     public Set<Entry<Integer, Palete>> entrySet() {
         throw new NullPointerException("public Set<Map.Entry<String,Aluno>> entrySet() not implemented!");

@@ -60,18 +60,19 @@ public class LeitorQR {
                 System.out.println("Registo Inválido");
                 return null;
             }
-            return new Palete(id, cod, new Localizacao(0, 0), new Material(designacao, precoUni), peso, 0);
+            return new Palete(id, cod, new Localizacao(0, 0), new Material(designacao, precoUni), peso);
         } catch (Exception e) {
             return null;
         }
     }
 
-    public void registaPalete(QRCode cod) throws RegistoInvalidoException{
+    public Palete registaPalete(QRCode cod) throws RegistoInvalidoException{
         Palete p = validaPalete(cod);
         if(p == null) throw new RegistoInvalidoException();
         else
             {
             paleteRegistada.put(p.getID(), p.clone());
+            return p.clone();
         }
 
     }
