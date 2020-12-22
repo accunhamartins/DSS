@@ -26,7 +26,7 @@ public class TextUI {
         this.scanner = new Scanner(System.in);
     }
 
-    public void run() throws RegistoInvalidoException, GestorInvalidoException, LoginInvalidoException, RobotInvalidoException {
+    public void run() throws RegistoInvalidoException, GestorInvalidoException, LoginInvalidoException, RobotInvalidoException, RobotIndisponivelException {
         do {
             menu.executa();
             switch (menu.getOpcao()) {
@@ -116,7 +116,11 @@ public class TextUI {
                 System.out.println("INSIRA ID DA PALETE A TRANSPORTAR: ");
                 int ID = -2;
                 ID = scanner.nextInt();
-                this.model.ordenaTransporte(ID);
+                try {
+                    this.model.ordenaTransporte(ID);
+                } catch(RobotInvalidoException | RobotIndisponivelException e){
+
+                }
             }
         }
         catch (NoPaleteRececaoException e) {

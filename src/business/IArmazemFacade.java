@@ -13,7 +13,7 @@ public interface IArmazemFacade {
     public void registaPalete(QRCode cod) throws RegistoInvalidoException;
     public String imprimeRececao() throws NoPaleteRececaoException;
     public String localizaPalete();
-    public void ordenaTransporte(int ID);
+    public void ordenaTransporte(int ID) throws RobotIndisponivelException, RobotInvalidoException;
     public void ordenaEntrega(int ID);
     public String imprimePrateleira();
     public void adicionaGestor(String password, String nome) throws GestorInvalidoException;
@@ -22,5 +22,6 @@ public interface IArmazemFacade {
     public void adicionaRobot(int ID) throws RobotInvalidoException;
     public int alteraDisponivel(int ID) throws RobotInvalidoException;
     public int contaPaletesArmazenadas();
+    public String imprimeRobot();
 
 }

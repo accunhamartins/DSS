@@ -15,6 +15,11 @@ public class Robot {
         this.disponivel = disponivel;
     }
 
+    public Robot(Robot r){
+        this.id = r.getId();
+        this.disponivel = r.isDisponivel();
+    }
+
     public int getId() {
         return id;
     }
@@ -29,5 +34,9 @@ public class Robot {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Robot clone(){
+        return new Robot(this);
     }
 }

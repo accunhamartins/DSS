@@ -3,7 +3,7 @@ USE Armazem;
 delete from QRCode;
 delete from Armazem;
 delete from Material;
-delete from Palete;
+delete from Palete where id = 4;
 
 INSERT INTO QRCode (Codigo)
 VALUES ('1&&Fruta&&5&&6'), ('2&&Pregos&&1&&3'),

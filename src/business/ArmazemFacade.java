@@ -36,10 +36,11 @@ public class ArmazemFacade implements IArmazemFacade{
         }
     }
 
-    private Robot escolheRobot(){
-        Robot r = null;
-
-        return r;
+    private Robot escolheRobot() throws RobotIndisponivelException{
+        for(Robot robot: this.robots.values()){
+            if(robot.isDisponivel() == 1) return robot.clone();
+        }
+        throw new RobotIndisponivelException();
     }
 
     public void adicionaGestor(String password, String nome) throws GestorInvalidoException {
@@ -178,38 +179,38 @@ public class ArmazemFacade implements IArmazemFacade{
         return count;
     }
 
-    public void ordenaTransporte(int ID){
-        Robot robot = robots.get(0);
-        for(Palete p: this.paletes.values()){
-            if(p.getID() == ID && robot.isDisponivel() == 1) {
-                if (contaPaletesArmazenadas() == 10) return;
-                else if(contaCorredor() < 5){
-                    Random rand = new Random();
-                    int rand_int2 = rand.nextInt(5);
-                    while(corredor1[rand_int2] == 1){
-                        rand_int2 = rand.nextInt(5);
-                    }
+    public void ordenaTransporte(int ID) throws RobotIndisponivelException, RobotInvalidoException{
+        try {
+            Robot robot = escolheRobot();
+            for (Palete p : this.paletes.values()) {
+                if (p.getID() == ID) {
+                    alteraDisponivel(robot.getId());
+                    if (contaPaletesArmazenadas() == 10) return;
+                    else if (contaCorredor() < 5) {
+                        Random rand = new Random();
+                        int rand_int2 = rand.nextInt(5);
+                        while (corredor1[rand_int2] == 1) {
+                            rand_int2 = rand.nextInt(5);
+                        }
                         p.setLocalizacao(new Localizacao(1, rand_int2 + 1));
-                    corredor1[rand_int2] = 1;
-                    this.paletes.put(p.getID(), p.clone());
-                    System.out.println("Palete transportada para corredor " + 1 + " prateleira " + (rand_int2 + 1));
-                }
-                else {
-                    Random rand = new Random();
-                    int rand_int2 = rand.nextInt(5);
-                    while(corredor2[rand_int2] == 1){
-                        rand_int2 = rand.nextInt(5);
+                        corredor1[rand_int2] = 1;
+                        this.paletes.put(p.getID(), p.clone());
+                        System.out.println("Palete transportada para corredor " + 1 + " prateleira " + (rand_int2 + 1 + "PELO ROBOT NR " + robot.getId()));
+                    } else {
+                        Random rand = new Random();
+                        int rand_int2 = rand.nextInt(5);
+                        while (corredor2[rand_int2] == 1) {
+                            rand_int2 = rand.nextInt(5);
+                        }
+                        p.setLocalizacao(new Localizacao(2, rand_int2 + 1));
+                        corredor2[rand_int2] = 1;
+                        this.paletes.put(p.getID(), p.clone());
+                        System.out.println("Palete transportada para corredor " + 2 + " prateleira " + (rand_int2 + 1) + "PELO ROBOT NR " + robot.getId());
                     }
-                    p.setLocalizacao(new Localizacao(2, rand_int2 + 1));
-                    corredor2[rand_int2] = 1;
-                    this.paletes.put(p.getID(), p.clone());
-                    System.out.println("Palete transportada para corredor " + 2 + " prateleira " + (rand_int2 + 1));
                 }
             }
-            else if(robot.isDisponivel() == 0){
-                System.out.println("Não existem robots disponíveis. Por favor, aguarde");
-            }
-
+        } catch(RobotIndisponivelException | RobotInvalidoException e){
+            System.out.println("Não existem robots disponíveis. Por favor, aguarde");
         }
     }
 
@@ -238,6 +239,19 @@ public class ArmazemFacade implements IArmazemFacade{
                 System.out.println("Não existem robots disponíveis. Por favor, aguarde");
             }
         }
+    }
+
+    public String imprimeRobot(){
+        StringBuilder sb = new StringBuilder();
+        for(Robot r: this.robots.values()){
+            sb.append("\nID -> " + r.getId());
+            sb.append("\nDisponível -> ");
+            if(r.isDisponivel() == 1){
+                sb.append("TRUE");
+            }
+            else sb.append("FALSE");
+        }
+        return sb.toString();
     }
 
 }
