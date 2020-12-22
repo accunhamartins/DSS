@@ -36,6 +36,12 @@ public class ArmazemFacade implements IArmazemFacade{
         }
     }
 
+    private Robot escolheRobot(){
+        Robot r = null;
+
+        return r;
+    }
+
     public void adicionaGestor(String password, String nome) throws GestorInvalidoException {
         if(this.gestores.containsKey(password)) throw new GestorInvalidoException();
         this.gestores.put(password, new Gestor(password, nome));

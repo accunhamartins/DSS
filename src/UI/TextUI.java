@@ -153,6 +153,7 @@ public class TextUI {
     }
     private void alteraDisponivel(){
         System.out.println("\nALTERAR DISPONIBILIDADE DE ROBOT\n");
+        System.out.println(this.model.imprimeRobot());
         System.out.println("INSIRA O ID DO ROBOT\n");
         int ID = 0;
         ID = scanner.nextInt();
