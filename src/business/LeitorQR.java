@@ -42,11 +42,12 @@ public class LeitorQR {
         }
     }
 
+    //Método que valida de um dado ID de palete existe
     public void valida(int id) throws RegistoInvalidoException{
         if (paleteRegistada.containsKey(id)) throw new RegistoInvalidoException();
     }
 
-
+    //Método que valida um QRCode
     private Palete validaPalete(QRCode cod) throws RegistoInvalidoException{
         try {
             String[] campos = cod.getCodigo().split("&&", 4);
@@ -66,6 +67,7 @@ public class LeitorQR {
         }
     }
 
+    //Método que efetua o registo de uma nova palete
     public Palete registaPalete(QRCode cod) throws RegistoInvalidoException{
         Palete p = validaPalete(cod);
         if(p == null) throw new RegistoInvalidoException();

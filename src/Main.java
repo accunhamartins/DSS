@@ -11,7 +11,7 @@ public class Main {
             new TextUI().run();
         }
         catch (Exception e) {
-            System.out.println("Não foi possível arrancar: "+e.getMessage());
+            System.out.println("NÃO FOI POSSÍVEL ARRANCAR:  "+e.getMessage());
         }
     }
 

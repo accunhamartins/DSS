@@ -61,6 +61,7 @@ public class TextUI {
         System.out.println("ATÉ BREVE!!!");
     }
 
+    //Método que efetua o registo de um novo Gestor
     private void adicionaGestor() {
         System.out.println("\nREGISTO DE UM NOVO GESTOR\n");
         System.out.println("INSIRA O SEU CÓDIGO DE ACESSO");
@@ -77,6 +78,7 @@ public class TextUI {
         }
     }
 
+    //Método que regista uma nova palete
     private void registaPalete(){
         QRCode cod = new QRCode();
         System.out.println("INSIRA QRCODE: ");
@@ -91,6 +93,7 @@ public class TextUI {
         }
     }
 
+    //Método que efetua a listagem de todas as paletes
     private void listaPalete(){
         System.out.println("INSIRA CÓDIGO DE ACESSO ");
         String password = "";
@@ -106,6 +109,7 @@ public class TextUI {
         }
     }
 
+    //Método que efetua o transporte de uma palete da zona de descarga para uma prateleira
     private void recolhePalete(){
         try {
             if (this.model.contaPaletesArmazenadas() == 10) {
@@ -129,6 +133,7 @@ public class TextUI {
             }
     }
 
+    //Método que efetua o transporte de uma palete de uma prateleira para a zona de carga
     public void entregaPalete(){
         if(this.model.contaPaletesArmazenadas() == 0){
             System.out.println("NÃO EXISTEM PALETES ARMAZENADAS\n");
@@ -147,6 +152,7 @@ public class TextUI {
         }
     }
 
+    //Método que adiciona um novo Robot
     private void adicionaRobot(){
         System.out.println("\nINSERIR NOVO ROBOT\n");
         System.out.println("INSIRA O ID DO NOVO ROBOT\n");
@@ -159,6 +165,8 @@ public class TextUI {
             System.out.println("O ID DO ROBOT É INVÁLIDO");
         }
     }
+
+    //Método que altera a disponibilidade de um Robot
     private void alteraDisponivel(){
         System.out.println("\nALTERAR DISPONIBILIDADE DE ROBOT\n");
         System.out.println(this.model.imprimeRobot());

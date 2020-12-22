@@ -31,7 +31,7 @@ public class GestorDAO implements Map<String, Gestor> {
         return GestorDAO.singleton;
     }
 
-
+    //Método que devolve a quantidade de Gestores registados na base de dados
     @Override
     public int size() {
         int i = 0;
@@ -43,20 +43,19 @@ public class GestorDAO implements Map<String, Gestor> {
             }
         }
         catch (Exception e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
         return i;
     }
 
-
+    //Método que indica se o map está vazio
     @Override
     public boolean isEmpty() {
         return this.size() == 0;
     }
 
-
+    //Método que indica se um dada chave existe no map
     @Override
     public boolean containsKey(Object key) {
         boolean r;
@@ -73,14 +72,14 @@ public class GestorDAO implements Map<String, Gestor> {
         return r;
     }
 
-
+    //Método que indica se um dado Gestor existe na base de dados
     @Override
     public boolean containsValue(Object value) {
         Gestor a = (Gestor) value;
         return this.containsKey(a.getPassword());
     }
 
-
+    //Método que devolve um dado Gestor, dada a sua password
     @Override
     public Gestor get(Object key) {
         Gestor a = null;
@@ -99,7 +98,7 @@ public class GestorDAO implements Map<String, Gestor> {
         return a;
     }
 
-
+    //Método que adiciona um novo Gestor à base de dados
     @Override
     public Gestor put(String key, Gestor a) {
         Gestor res = null;
@@ -116,7 +115,7 @@ public class GestorDAO implements Map<String, Gestor> {
         return res;
     }
 
-
+    //Método que remove um Gestor da base de dados, dada a sua password
     @Override
     public Gestor remove(Object key) {
         Gestor t = this.get(key);
@@ -151,7 +150,7 @@ public class GestorDAO implements Map<String, Gestor> {
         }
     }
 
-
+    //Método que devolve um Set com todas as key registadas
     @Override
     public Set<String> keySet() {
         Set<String> set = null;
@@ -172,7 +171,7 @@ public class GestorDAO implements Map<String, Gestor> {
     }
 
 
-
+    //Método que devolve uma Collection com todos os Gestores registados
     @Override
     public Collection<Gestor> values() {
         Collection<Gestor> col = new HashSet<>();

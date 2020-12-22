@@ -27,6 +27,7 @@ public class ArmazemFacade implements IArmazemFacade{
         preenchePrateleiras();
         }
 
+    //Método que preenche os arrays relativos a cada corredor, consoante tenham, ou não, paletes nas respetivas posições
     public void preenchePrateleiras(){
         for(Palete p: paletes.values()){
             if(p.getLocalizacao().getZona() > 0 && p.getLocalizacao().getPrateleira() > 0){
@@ -36,6 +37,7 @@ public class ArmazemFacade implements IArmazemFacade{
         }
     }
 
+    //Método que devolve o primeiro robot disponível
     private Robot escolheRobot() throws RobotIndisponivelException{
         for(Robot robot: this.robots.values()){
             if(robot.isDisponivel() == 1) return robot.clone();
@@ -43,16 +45,19 @@ public class ArmazemFacade implements IArmazemFacade{
         throw new RobotIndisponivelException();
     }
 
+    //Método que efetua o registo de um novo gestor na nossa Base de Dados
     public void adicionaGestor(String password, String nome) throws GestorInvalidoException {
         if(this.gestores.containsKey(password)) throw new GestorInvalidoException();
         this.gestores.put(password, new Gestor(password, nome));
     }
 
+    //Método que adiciona um novo robot à base de dados
     public void adicionaRobot(int ID) throws RobotInvalidoException {
         if(this.robots.containsKey(ID)) throw new RobotInvalidoException();
         this.robots.put(ID, new Robot(ID, 1));
     }
 
+    //Método que altera a disponibilidade de um robot. Se este está disponível (1) passa a indisponível (0) e o inverso.
     public int alteraDisponivel(int ID) throws RobotInvalidoException{
         if(!this.robots.containsKey(ID)) throw new RobotInvalidoException();
         Robot r = this.robots.get(ID);
@@ -68,14 +73,17 @@ public class ArmazemFacade implements IArmazemFacade{
         return i;
     }
 
+    // Método que indica se um gestor existe, dada uma password
     public void exiteGestor(String password) throws LoginInvalidoException{
        if(!this.gestores.containsKey(password)) throw new LoginInvalidoException();
     }
 
+    // Método que devolve um gestor dada a sua password
     public Gestor getGestor(String password){
         return this.gestores.get(password).clone();
     }
 
+    //Método de devolve todos os gestores registados
     public Map<String, Gestor> getGestores() {
         Map<String, Gestor> gestores = new HashMap<>();
         for(Gestor g: gestores.values()){
@@ -84,6 +92,7 @@ public class ArmazemFacade implements IArmazemFacade{
         return gestores;
     }
 
+    //Método que devolve todos os robots registados
     public Map<Integer, Robot> getRobots() {
         Map<Integer, Robot> robots = new HashMap<>();
         for(Robot r: robots.values()){
@@ -92,6 +101,7 @@ public class ArmazemFacade implements IArmazemFacade{
         return robots;
     }
 
+    //Método que devolve todas as paletes registadas
     public Map<Integer, Palete> getPalete() {
         Map<Integer, Palete> paletes = new HashMap<>();
         for(Palete p: paletes.values()){
@@ -100,6 +110,7 @@ public class ArmazemFacade implements IArmazemFacade{
         return paletes;
     }
 
+    //Método que altera as paletes registadas
     public void setCorredores(Map<Integer, Palete> paleteRegistada) {
         this.paletes=new HashMap<>();
         for(Palete p: paleteRegistada.values()){
@@ -107,6 +118,7 @@ public class ArmazemFacade implements IArmazemFacade{
         }
     }
 
+    //Método que altera os robots registados
     public void setRobots(Map<Integer, Robot> robot) {
         this.robots =new HashMap<>();
         for(Robot r: robot.values()){
@@ -114,7 +126,7 @@ public class ArmazemFacade implements IArmazemFacade{
         }
     }
 
-
+    //Método que efetua o registo de uma nova palete
     public void registaPalete(QRCode cod) throws RegistoInvalidoException {
         LeitorQR qr = new LeitorQR();
         qr.setPaleteRegistada(paletes);
@@ -122,6 +134,7 @@ public class ArmazemFacade implements IArmazemFacade{
         paletes.put(nova.getID(), nova);
     }
 
+    //Método que devolve em formato de String as paletes na zona de carga
     public String imprimeRececao() throws NoPaleteRececaoException{
         int count = 0;
         StringBuilder sb = new StringBuilder();
@@ -136,6 +149,7 @@ public class ArmazemFacade implements IArmazemFacade{
         return sb.toString();
     }
 
+    //Método que devolve no formato de String a localização de todas as paletes, para serem apresentadas a um Gestor
     public String localizaPalete(){
         StringBuilder sb = new StringBuilder();
         if(paletes.size() == 0) return sb.append("NÃO HÁ PALETES!").toString();
@@ -161,6 +175,7 @@ public class ArmazemFacade implements IArmazemFacade{
         return sb.toString();
     }
 
+    //Método que devolve o número de paletes armazenadas nos corredores
     public int contaPaletesArmazenadas() {
         int count = 0;
         for (Palete p : paletes.values()) {
@@ -171,6 +186,7 @@ public class ArmazemFacade implements IArmazemFacade{
         return count;
     }
 
+    //Método que devolve o número de paletes no corredor 1
     public int contaCorredor(){
         int count = 0;
         for (int i = 0; i < 4; i++) {
@@ -179,6 +195,7 @@ public class ArmazemFacade implements IArmazemFacade{
         return count;
     }
 
+    //Método que efetua o transporte de uma palete da zona de descarga para um corredor e prateleira
     public void ordenaTransporte(int ID) throws RobotIndisponivelException, RobotInvalidoException{
         try {
             Robot robot = escolheRobot();
@@ -214,6 +231,7 @@ public class ArmazemFacade implements IArmazemFacade{
         }
     }
 
+    //Método que devolve no formato de String o ID das paletes armazenadas nas prateleiras
     public String imprimePrateleira(){
         StringBuilder sb = new StringBuilder();
         sb.append("PALETES ARMAZENADAS");
@@ -225,6 +243,7 @@ public class ArmazemFacade implements IArmazemFacade{
         return sb.toString();
     }
 
+    //Método que efetua o transporte de uma palete de uma prateleira para a zona de carga
     public void ordenaEntrega(int ID) throws RobotIndisponivelException, RobotInvalidoException {
         try{
         Robot robot = this.escolheRobot();
@@ -243,6 +262,7 @@ public class ArmazemFacade implements IArmazemFacade{
         }
     }
 
+    //Método que devolve no formato de String o ID dos robots e a sua disponibilidade
     public String imprimeRobot(){
         StringBuilder sb = new StringBuilder();
         for(Robot r: this.robots.values()){

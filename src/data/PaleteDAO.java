@@ -37,7 +37,6 @@ public class PaleteDAO implements Map<Integer, Palete> {
             stm.executeUpdate(sql);
 
         } catch (SQLException e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -51,7 +50,7 @@ public class PaleteDAO implements Map<Integer, Palete> {
         return PaleteDAO.singleton;
     }
 
-
+    //Método que devolve o número de paletes registadas
     public int size() {
         int i = 0;
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
@@ -62,20 +61,19 @@ public class PaleteDAO implements Map<Integer, Palete> {
             }
         }
         catch (Exception e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
         return i;
     }
 
-
+    //Método que indica se o map está vazio
     @Override
     public boolean isEmpty() {
         return this.size() == 0;
     }
 
-
+    //Método que indica se uma dada palete existe, dado o seu ID
     @Override
     public boolean containsKey(Object key) {
         boolean r;
@@ -92,14 +90,14 @@ public class PaleteDAO implements Map<Integer, Palete> {
         return r;
     }
 
+    //Método que indica se uma dada palete existe
     @Override
     public boolean containsValue(Object value) {
         Palete p = (Palete) value;
         return this.containsKey(p.getID());
     }
 
-
-
+    //Método que devolve uma palete, dado o seu ID
     public Palete get(Object key) {
         Palete p = null;
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
@@ -120,13 +118,13 @@ public class PaleteDAO implements Map<Integer, Palete> {
                 }
             }
          catch (SQLException e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
         return p;
     }
 
+    //Método que adiciona uma palete à base de dados
     public Palete put(Integer key, Palete t) {
         Palete res = null;
         Localizacao l = t.getLocalizacao();
@@ -156,6 +154,7 @@ public class PaleteDAO implements Map<Integer, Palete> {
         return res;
     }
 
+    //Método que remove uma palete da base de dados
     @Override
     public Palete remove(Object key) {
         Palete p = this.get(key);
@@ -189,7 +188,7 @@ public class PaleteDAO implements Map<Integer, Palete> {
         }
     }
 
-
+    //Método que devolve um Set com todos os ID's de paletes registadas
     @Override
     public Set<Integer> keySet() {
         Set<Integer> set = null;
@@ -209,7 +208,7 @@ public class PaleteDAO implements Map<Integer, Palete> {
         return set;
     }
 
-
+    //Método que devolve uma Collection com todas as paletes na base de dados
     @Override
     public Collection<Palete> values() {
         Collection<Palete> res = new HashSet<>();
@@ -222,7 +221,6 @@ public class PaleteDAO implements Map<Integer, Palete> {
                 res.add(t);
             }
         } catch (Exception e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }

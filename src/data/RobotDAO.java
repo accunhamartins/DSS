@@ -16,7 +16,6 @@ public class RobotDAO implements Map<Integer, Robot> {
                     "Disponivel int DEFAULT 1)";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
-            // Erro a criar tabela...
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -30,7 +29,7 @@ public class RobotDAO implements Map<Integer, Robot> {
         return RobotDAO.singleton;
     }
 
-
+    //Método que devolve o número de robots registados na base de dados
     @Override
     public int size() {
         int i = 0;
@@ -49,13 +48,13 @@ public class RobotDAO implements Map<Integer, Robot> {
         return i;
     }
 
-
+    //Método que indica se o map está vazio
     @Override
     public boolean isEmpty() {
         return this.size() == 0;
     }
 
-
+    //Método que indica se um dado robot está registado na base de dados, dado o seu ID
     @Override
     public boolean containsKey(Object key) {
         boolean r;
@@ -72,14 +71,14 @@ public class RobotDAO implements Map<Integer, Robot> {
         return r;
     }
 
-
+    //Método que indica se um dado robot está registado na base de dados
     @Override
     public boolean containsValue(Object value) {
         Robot a = (Robot) value;
         return this.containsKey(a.getId());
     }
 
-
+    //Método que devolve um Robot, dado o seu ID
     @Override
     public Robot get(Object key) {
         Robot a = null;
@@ -96,7 +95,7 @@ public class RobotDAO implements Map<Integer, Robot> {
         return a;
     }
 
-
+    //Método que adiciona um novo robot à base de dados
     @Override
     public Robot put(Integer key, Robot a) {
         Robot res = null;
@@ -112,7 +111,7 @@ public class RobotDAO implements Map<Integer, Robot> {
         return res;
     }
 
-
+    //Método que remove um robot da base de dados
     @Override
     public Robot remove(Object key) {
         Robot t = this.get(key);
@@ -146,7 +145,7 @@ public class RobotDAO implements Map<Integer, Robot> {
         }
     }
 
-
+    //Método que devolve um Set com todos os ID's dos robots registados
     @Override
     public Set<Integer> keySet() {
         Set<Integer> set = null;
@@ -166,7 +165,7 @@ public class RobotDAO implements Map<Integer, Robot> {
         return set;
     }
 
-
+    //Método que devolve uma Collection com todos os Robots registados
     @Override
     public Collection<Robot> values() {
         Collection<Robot> col = new HashSet<>();
