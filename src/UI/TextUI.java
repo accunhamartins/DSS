@@ -139,7 +139,11 @@ public class TextUI {
             System.out.println("INSIRA ID DE PALETE A TRANSPORTAR: ");
             int ID = -2;
             ID = scanner.nextInt();
+            try {
             this.model.ordenaEntrega(ID);
+            } catch(RobotInvalidoException | RobotIndisponivelException e){
+
+            }
         }
     }
 

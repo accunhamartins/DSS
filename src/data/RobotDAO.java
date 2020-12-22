@@ -86,12 +86,10 @@ public class RobotDAO implements Map<Integer, Robot> {
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT * FROM Robots WHERE Id ='"+key+"'")) {
-            if (rs.next()) {  // A chave existe na tabela
-                // Reconstruir o aluno com os dados obtidos da BD - a chave estranjeira da turma, não é utilizada aqui.
+            if (rs.next()) {
                 a = new Robot(rs.getInt("ID"), rs.getInt("Disponivel"));
             }
         } catch (SQLException e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -104,13 +102,10 @@ public class RobotDAO implements Map<Integer, Robot> {
         Robot res = null;
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
              Statement stm = conn.createStatement()) {
-
-            // Actualizar o aluno
             stm.executeUpdate(
                     "INSERT INTO Robots VALUES ('"+a.getId()+"', '"+a.isDisponivel()+"') " +
                             "ON DUPLICATE KEY UPDATE Disponivel=VALUES(Disponivel)");
         } catch (SQLException e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -125,7 +120,6 @@ public class RobotDAO implements Map<Integer, Robot> {
              Statement stm = conn.createStatement()) {
             stm.executeUpdate("DELETE FROM Robots WHERE Password='"+key+"'");
         } catch (Exception e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -147,7 +141,6 @@ public class RobotDAO implements Map<Integer, Robot> {
              Statement stm = conn.createStatement()) {
             stm.executeUpdate("TRUNCATE Robots");
         } catch (SQLException e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -156,35 +149,48 @@ public class RobotDAO implements Map<Integer, Robot> {
 
     @Override
     public Set<Integer> keySet() {
-        throw new NullPointerException("Not implemented!");
+        Set<Integer> set = null;
+        try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM Robots WHERE ID = ?")){
+            set = new HashSet<>();
+            ps.setString(1, "ID");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                set.add(rs.getInt("ID"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException(e.getMessage());
+        }
+        return set;
     }
 
-    /**
-     * @return Todos as alunos da base de dados
-     */
+
     @Override
     public Collection<Robot> values() {
         Collection<Robot> col = new HashSet<>();
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT ID FROM Robots")) {
-            while (rs.next()) {   // Utilizamos o get para construir as alunos
+            while (rs.next()) {
                 col.add(this.get(rs.getInt("ID")));
             }
         } catch (Exception e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
         return col;
     }
 
-    /**
-     * NÃO IMPLEMENTADO!
-     * @return ainda nada!
-     */
+
     @Override
     public Set<Entry<Integer, Robot>> entrySet() {
-        throw new NullPointerException("public Set<Map.Entry<String,Aluno>> entrySet() not implemented!");
+        Set<Integer> keys = new HashSet<>(this.keySet());
+        HashMap<Integer, Robot> map = new HashMap<>();
+        for(Integer key: keys){
+            map.put(key, this.get(key));
+        }
+        return map.entrySet();
     }
 }

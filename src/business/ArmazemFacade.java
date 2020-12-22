@@ -86,16 +86,16 @@ public class ArmazemFacade implements IArmazemFacade{
 
     public Map<Integer, Robot> getRobots() {
         Map<Integer, Robot> robots = new HashMap<>();
-        for(int i: robots.keySet()){
-            robots.put(i, this.robots.get(i));
+        for(Robot r: robots.values()){
+            robots.put(r.getId(), r.clone());
         }
         return robots;
     }
 
     public Map<Integer, Palete> getPalete() {
         Map<Integer, Palete> paletes = new HashMap<>();
-        for(int i: paletes.keySet()){
-            paletes.put(i, this.paletes.get(i).clone());
+        for(Palete p: paletes.values()){
+            paletes.put(p.getID(), p.clone());
         }
         return paletes;
     }
@@ -138,25 +138,25 @@ public class ArmazemFacade implements IArmazemFacade{
 
     public String localizaPalete(){
         StringBuilder sb = new StringBuilder();
-        if(paletes.size() == 0) return sb.append("Não há paletes!").toString();
+        if(paletes.size() == 0) return sb.append("NÃO HÁ PALETES!").toString();
         sb.append("LOCALIZAÇÃO DAS PALETES\n");
         for(Palete p: paletes.values()){
             sb.append("\nID " + p.getID());
             if(p.getLocalizacao().getPrateleira() == 0 && p.getLocalizacao().getZona() == 0){
-                sb.append("\nZona de Descarga");
-                sb.append("\n" + "Material -> " + p.getMaterial().getDesignacao());
+                sb.append("\nZONA DE DESCARGA");
+                sb.append("\n" + "MATERIAL -> " + p.getMaterial().getDesignacao());
             }
             else if(p.getLocalizacao().getPrateleira() == -1 && p.getLocalizacao().getZona() == -1){
-                sb.append("\nZona de Carga");
-                sb.append("\n" + "Material -> " + p.getMaterial().getDesignacao());
+                sb.append("\nZONA DE CARGA");
+                sb.append("\n" + "MATERIAL-> " + p.getMaterial().getDesignacao());
             }
             else {
-                sb.append("\n" + "Corredor -> " + p.getLocalizacao().getZona());
-                sb.append("\n" + "Prateleira -> " + p.getLocalizacao().getPrateleira());
-                sb.append("\n" + "Material -> " + p.getMaterial().getDesignacao());
+                sb.append("\n" + "CORREDOR -> " + p.getLocalizacao().getZona());
+                sb.append("\n" + "PRATELEIRA -> " + p.getLocalizacao().getPrateleira());
+                sb.append("\n" + "MATERIAL -> " + p.getMaterial().getDesignacao());
             }
-            sb.append("\n" + "Peso -> " + p.getPeso());
-            sb.append("\n" + "Preço -> " + (p.getMaterial().getPrecoUnitario() * p.getPeso()) + "\n\n");
+            sb.append("\n" + "PESO -> " + p.getPeso());
+            sb.append("\n" + "PREÇO -> " + (p.getMaterial().getPrecoUnitario() * p.getPeso()) + "\n\n");
         }
         return sb.toString();
     }
@@ -195,7 +195,7 @@ public class ArmazemFacade implements IArmazemFacade{
                         p.setLocalizacao(new Localizacao(1, rand_int2 + 1));
                         corredor1[rand_int2] = 1;
                         this.paletes.put(p.getID(), p.clone());
-                        System.out.println("Palete transportada para corredor " + 1 + " prateleira " + (rand_int2 + 1 + "PELO ROBOT NR " + robot.getId()));
+                        System.out.println("PALETE TRANSPORTADA PARA O CORREDOR " + 1 + " PRATELEIRA " + (rand_int2 + 1) + " PELO ROBOT NR " + robot.getId());
                     } else {
                         Random rand = new Random();
                         int rand_int2 = rand.nextInt(5);
@@ -205,12 +205,12 @@ public class ArmazemFacade implements IArmazemFacade{
                         p.setLocalizacao(new Localizacao(2, rand_int2 + 1));
                         corredor2[rand_int2] = 1;
                         this.paletes.put(p.getID(), p.clone());
-                        System.out.println("Palete transportada para corredor " + 2 + " prateleira " + (rand_int2 + 1) + "PELO ROBOT NR " + robot.getId());
+                        System.out.println("PALETE TRANSPORTADA PARA O CORREDOR " + 2 + " PRATELEIRA " + (rand_int2 + 1) + " PELO ROBOT NR " + robot.getId());
                     }
                 }
             }
         } catch(RobotIndisponivelException | RobotInvalidoException e){
-            System.out.println("Não existem robots disponíveis. Por favor, aguarde");
+            System.out.println("NÃO EXISTEM ROBOTS DISPONÍVEIS. POR FAVOR, AGUARDE");
         }
     }
 
@@ -225,19 +225,21 @@ public class ArmazemFacade implements IArmazemFacade{
         return sb.toString();
     }
 
-    public void ordenaEntrega(int ID){
-        Robot robot = robots.get(0);
-        for(Palete p: this.paletes.values()){
-            if(p.getID() == ID && robot.isDisponivel() == 1){
-                if(p.getLocalizacao().getZona() == 1) corredor1[p.getLocalizacao().getPrateleira() - 1] = 0;
+    public void ordenaEntrega(int ID) throws RobotIndisponivelException, RobotInvalidoException {
+        try{
+        Robot robot = this.escolheRobot();
+        for(Palete p: this.paletes.values()) {
+            if (p.getID() == ID ) {
+                alteraDisponivel(robot.getId());
+                if (p.getLocalizacao().getZona() == 1) corredor1[p.getLocalizacao().getPrateleira() - 1] = 0;
                 else corredor2[p.getLocalizacao().getPrateleira() - 1] = 0;
                 p.setLocalizacao(new Localizacao(-1, -1));
                 this.paletes.put(p.getID(), p.clone());
-                System.out.println("Palete transportada para zona de carga!");
+                System.out.println("PALETE TRANSPORTADA PARA ZONA DE CARGA PELO ROBOT NR " + robot.getId());
             }
-            else if(robot.isDisponivel() == 0){
-                System.out.println("Não existem robots disponíveis. Por favor, aguarde");
-            }
+        }
+        } catch (RobotIndisponivelException | RobotInvalidoException e){
+            System.out.println("NÃO EXISTEM ROBOTS DISPONÍVEIS. POR FAVOR, AGUARDE");
         }
     }
 
@@ -245,7 +247,7 @@ public class ArmazemFacade implements IArmazemFacade{
         StringBuilder sb = new StringBuilder();
         for(Robot r: this.robots.values()){
             sb.append("\nID -> " + r.getId());
-            sb.append("\nDisponível -> ");
+            sb.append("\nDISPONÍVEL -> ");
             if(r.isDisponivel() == 1){
                 sb.append("TRUE");
             }

@@ -14,7 +14,7 @@ public interface IArmazemFacade {
     public String imprimeRececao() throws NoPaleteRececaoException;
     public String localizaPalete();
     public void ordenaTransporte(int ID) throws RobotIndisponivelException, RobotInvalidoException;
-    public void ordenaEntrega(int ID);
+    public void ordenaEntrega(int ID) throws RobotIndisponivelException, RobotInvalidoException;
     public String imprimePrateleira();
     public void adicionaGestor(String password, String nome) throws GestorInvalidoException;
     public void exiteGestor(String password) throws LoginInvalidoException;

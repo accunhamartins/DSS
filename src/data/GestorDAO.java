@@ -1,6 +1,7 @@
 package data;
 
 import business.Gestor;
+import business.Robot;
 
 import java.sql.*;
 import java.util.*;
@@ -153,35 +154,51 @@ public class GestorDAO implements Map<String, Gestor> {
 
     @Override
     public Set<String> keySet() {
-        throw new NullPointerException("Not implemented!");
+        Set<String> set = null;
+        try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM Gestores WHERE Password = ?")){
+            set = new HashSet<>();
+            ps.setString(1, "Password");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                set.add(rs.getString("Password"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException(e.getMessage());
+        }
+        return set;
     }
 
-    /**
-     * @return Todos as alunos da base de dados
-     */
+
+
     @Override
     public Collection<Gestor> values() {
         Collection<Gestor> col = new HashSet<>();
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
              Statement stm = conn.createStatement();
              ResultSet rs = stm.executeQuery("SELECT Password FROM Gestores")) {
-            while (rs.next()) {   // Utilizamos o get para construir as alunos
+            while (rs.next()) {
                 col.add(this.get(rs.getString("Password")));
             }
         } catch (Exception e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
         return col;
     }
 
-    /**
-     * NÃO IMPLEMENTADO!
-     * @return ainda nada!
-     */
+
+
     @Override
     public Set<Entry<String, Gestor>> entrySet() {
-        throw new NullPointerException("public Set<Map.Entry<String,Aluno>> entrySet() not implemented!");
+        Set<String> keys = new HashSet<>(this.keySet());
+        HashMap<String, Gestor> map = new HashMap<>();
+        for(String key: keys){
+            map.put(key, this.get(key));
+        }
+        return map.entrySet();
     }
 }
+

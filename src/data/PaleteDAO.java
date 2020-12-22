@@ -1,9 +1,6 @@
 package data;
 
-import business.Localizacao;
-import business.Material;
-import business.Palete;
-import business.QRCode;
+import business.*;
 
 import java.sql.*;
 import java.util.*;
@@ -187,7 +184,6 @@ public class PaleteDAO implements Map<Integer, Palete> {
              Statement stm = conn.createStatement()) {
             stm.executeUpdate("TRUNCATE Palete");
         } catch (SQLException e) {
-            // Database error!
             e.printStackTrace();
             throw new NullPointerException(e.getMessage());
         }
@@ -196,7 +192,21 @@ public class PaleteDAO implements Map<Integer, Palete> {
 
     @Override
     public Set<Integer> keySet() {
-        throw new NullPointerException("Not implemented!");
+        Set<Integer> set = null;
+        try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM Palete WHERE ID = ?")){
+            set = new HashSet<>();
+            ps.setString(1, "ID");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                set.add(rs.getInt("ID"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException(e.getMessage());
+        }
+        return set;
     }
 
 
@@ -221,7 +231,12 @@ public class PaleteDAO implements Map<Integer, Palete> {
 
 
     @Override
-    public Set<Entry<Integer, Palete>> entrySet() {
-        throw new NullPointerException("public Set<Map.Entry<String,Aluno>> entrySet() not implemented!");
+    public Set<Entry<Integer, Palete>> entrySet(){
+        Set<Integer> keys = new HashSet<>(this.keySet());
+        HashMap<Integer, Palete> map = new HashMap<>();
+        for(Integer key: keys){
+            map.put(key, this.get(key));
+        }
+        return map.entrySet();
     }
 }
