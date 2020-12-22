@@ -12,7 +12,6 @@ public class TextUI {
     private IArmazemFacade model;
     private Scanner scanner;
 
-
     public TextUI() {
         String[] opcoes = {
                 "COMUNICAR QRCODE",
@@ -59,7 +58,7 @@ public class TextUI {
                     break;
             }
         } while (menu.getOpcao()!=0); // A opção 0 é usada para sair do menu.
-        System.out.println("ATÉ BREVE!...");
+        System.out.println("ATÉ BREVE!!!");
     }
 
     private void adicionaGestor() {
@@ -169,6 +168,5 @@ public class TextUI {
             System.out.println("O ID DO ROBOT É INVÁLIDO");
         }
     }
-
 }
 
