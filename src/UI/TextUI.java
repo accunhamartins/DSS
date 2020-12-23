@@ -95,9 +95,10 @@ public class TextUI {
 
     //Método que efetua a listagem de todas as paletes
     private void listaPalete(){
+        Scanner leitor = new Scanner(System.in);
         System.out.println("INSIRA CÓDIGO DE ACESSO ");
         String password = "";
-        password = scanner.nextLine();
+        password = leitor.nextLine();
        try {
             this.model.exiteGestor(password);
             Gestor g = this.model.getGestor(password);
