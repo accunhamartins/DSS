@@ -58,7 +58,7 @@ public class LeitorQR {
             try {
                 valida(id);
             } catch (RegistoInvalidoException e) {
-                System.out.println("Registo Inválido");
+                System.out.println("REGISTO INVÁLIDO");
                 return null;
             }
             return new Palete(id, cod, new Localizacao(0, 0), new Material(designacao, precoUni), peso);
