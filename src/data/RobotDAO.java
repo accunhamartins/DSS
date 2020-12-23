@@ -13,7 +13,9 @@ public class RobotDAO implements Map<Integer, Robot> {
              Statement stm = conn.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS Robots (" +
                     "ID int NOT NULL PRIMARY KEY," +
-                    "Disponivel int DEFAULT 1)";
+                    "Armazem int NOT NULL," +
+                    "Disponivel int DEFAULT 1, "+
+                    "foreign key(Armazem) references Armazem(ID))";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -102,7 +104,7 @@ public class RobotDAO implements Map<Integer, Robot> {
         try (Connection conn = DriverManager.getConnection(DAOConfig.URL, DAOConfig.USERNAME, DAOConfig.PASSWORD);
              Statement stm = conn.createStatement()) {
             stm.executeUpdate(
-                    "INSERT INTO Robots VALUES ('"+a.getId()+"', '"+a.isDisponivel()+"') " +
+                    "INSERT INTO Robots VALUES ('"+a.getId()+ "', '"+ 1 +"', '"+a.isDisponivel()+"') " +
                             "ON DUPLICATE KEY UPDATE Disponivel=VALUES(Disponivel)");
         } catch (SQLException e) {
             e.printStackTrace();

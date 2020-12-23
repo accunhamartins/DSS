@@ -14,7 +14,9 @@ public class GestorDAO implements Map<String, Gestor> {
              Statement stm = conn.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS Gestores (" +
                     "Password varchar(30) NOT NULL PRIMARY KEY," +
-                    "Nome varchar(45) DEFAULT NULL)";
+                    "Armazem int NOT NULL," +
+                    "Nome varchar(45) DEFAULT NULL, " +
+                    "foreign key(Armazem) references Armazem(ID))";
             stm.executeUpdate(sql);
         } catch (SQLException e) {
             // Erro a criar tabela...
@@ -106,7 +108,7 @@ public class GestorDAO implements Map<String, Gestor> {
              Statement stm = conn.createStatement()) {
 
             stm.executeUpdate(
-                    "INSERT INTO Gestores VALUES ('"+a.getPassword()+"', '"+a.getNome()+"') " +
+                    "INSERT INTO Gestores VALUES ('"+a.getPassword()+ "', '"+ 1 +"', '"+a.getNome()+"') " +
                             "ON DUPLICATE KEY UPDATE Nome=VALUES(Nome)");
         } catch (SQLException e) {
             e.printStackTrace();
