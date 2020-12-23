@@ -63,13 +63,14 @@ public class TextUI {
 
     //Método que efetua o registo de um novo Gestor
     private void adicionaGestor() {
+        Scanner leitor = new Scanner(System.in);
         System.out.println("\nREGISTO DE UM NOVO GESTOR\n");
         System.out.println("INSIRA O SEU CÓDIGO DE ACESSO");
         String password = null;
-        password = scanner.nextLine();
+        password = leitor.nextLine();
         System.out.println("INSIRA O SEU NOME");
         String nome= null;
-        nome = scanner.nextLine();
+        nome = leitor.nextLine();
         try {
             this.model.adicionaGestor(password, nome);
             System.out.println("NOVO GESTOR REGISTADO COM SUCESSO!");
