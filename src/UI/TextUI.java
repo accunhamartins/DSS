@@ -81,9 +81,10 @@ public class TextUI {
     //Método que regista uma nova palete
     private void registaPalete(){
         QRCode cod = new QRCode();
+        Scanner leitor = new Scanner(System.in);
         System.out.println("INSIRA QRCODE: ");
         String codigo = null;
-        codigo = scanner.nextLine();
+        codigo = leitor.nextLine();
         cod.setCodigo(codigo);
         try {
             this.model.registaPalete(cod);

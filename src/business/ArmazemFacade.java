@@ -189,7 +189,7 @@ public class ArmazemFacade implements IArmazemFacade{
     //Método que devolve o número de paletes no corredor 1
     public int contaCorredor(){
         int count = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             if(corredor1[i] == 1) count++;
         }
         return count;
@@ -204,6 +204,7 @@ public class ArmazemFacade implements IArmazemFacade{
                     alteraDisponivel(robot.getId());
                     if (contaPaletesArmazenadas() == 10) return;
                     else if (contaCorredor() < 5) {
+                        System.out.println(contaCorredor());
                         Random rand = new Random();
                         int rand_int2 = rand.nextInt(5);
                         while (corredor1[rand_int2] == 1) {
